@@ -1,0 +1,9 @@
+MIDlet-1: Conflict of Heroes, icon.png, coh.CoH
+MIDlet-Icon: icon.png
+MIDlet-Jar-Size: 11601
+MIDlet-Jar-URL: BoardCalc.jar
+MIDlet-Name: BoardCalc
+MIDlet-Vendor: Krzysztof Rzymkowski
+MIDlet-Version: 0.3
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
