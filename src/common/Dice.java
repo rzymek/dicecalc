@@ -1,16 +1,16 @@
 package common;
 
 
-public class Dice2 {
+public class Dice {
 	protected int min;
 	protected int max;
 	protected int[] p = null;
 	
-	protected Dice2() {
+	protected Dice() {
 		
 	}
 	
-	public Dice2(int count, int sides) {
+	public Dice(int count, int sides) {
 		min = count;
 		max = count*sides;
 		p = new int[max-min+1];

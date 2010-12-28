@@ -1,6 +1,6 @@
 package common;
 
-public class DiceDropMiddle extends Dice2 {
+public class DiceDropMiddle extends Dice {
 	private int[] tmp;
 	private final int drop;
 	public DiceDropMiddle(int count, int sides, int drop) {
