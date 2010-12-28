@@ -10,8 +10,9 @@ import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 
 import common.ChartGraphics;
-import common.Dice;
+import common.Dice2;
 import common.DiceGraphics;
+import common.DiceHand;
 import common.GridGraphics;
 
 public class CoHCanvas extends Canvas {
@@ -31,7 +32,8 @@ public class CoHCanvas extends Canvas {
 
 	
 	private GridGraphics gx;
-	private Dice dice;
+	private Dice2 dice;
+	private DiceHand hand;
 	private DiceGraphics gd;
 	private ChartGraphics gp;
 	private int bigDiceSize;
@@ -50,7 +52,8 @@ public class CoHCanvas extends Canvas {
 		gdp.setGrid(11);
 		gd = new DiceGraphics(0,(1+data.amods.length)*cellheight,getWidth(),getHeight());
 		bigDiceSize = Math.min(gd.getWidth()/2-DIE_MARGIN*3, gd.getHeight()-DIE_MARGIN*2);
-		dice = new Dice(2,6);
+		dice = new Dice2(2,6);
+		hand = new DiceHand(2, 6);
 		try{
 			diceSound = Manager.createPlayer(getClass().getResourceAsStream("/dice.amr"),"audio/amr");
 			diceSound.prefetch();
@@ -72,7 +75,7 @@ public class CoHCanvas extends Canvas {
 			g.setFont(larger);g.setColor(0xffffff);
 			g.drawString(String.valueOf(data.roll[0]+data.roll[1]), 1, 1, Graphics.TOP|Graphics.LEFT);
 			g.setFont(smaller);g.setColor(0x808080);
-			g.drawString(String.valueOf(dice.getCount()), cellwidth, cellheight, Graphics.BOTTOM|Graphics.RIGHT);
+			g.drawString(String.valueOf(hand.getCount()), cellwidth, cellheight, Graphics.BOTTOM|Graphics.RIGHT);
 		}
 	}
 
@@ -89,7 +92,7 @@ public class CoHCanvas extends Canvas {
 			gp.fillValue(rollProbability,0x8080ff);
 		for(int j=0;j<data.amods.length;++j){
 			for(int i=0;i<data.dmods.length;++i){
-				int need2throw = dice.normalize(getValue(data.dv) - getValue(data.av)-data.amods[j]+data.dmods[i]);
+				int need2throw = hand.normalize(getValue(data.dv) - getValue(data.av)-data.amods[j]+data.dmods[i]);
 				int probability = dice.getProbability(need2throw);
 				int p = i*3+j;
 				gp.drawBar(p, probability, String.valueOf(need2throw));
@@ -120,7 +123,7 @@ public class CoHCanvas extends Canvas {
 		gdp.setGraphics(g);
 		gdp.drawLines();
 		for(int i=2;i<=12;++i){
-			gdp.drawBar(i-2, dice.getNormalizedStatFor(i), String.valueOf(i));
+			gdp.drawBar(i-2, hand.getNormalizedStatFor(i), String.valueOf(i));
 		}
 		g.setColor(0x606060);
 		int xhalf = gdp.x1+gdp.getWidth()/2;
@@ -160,7 +163,7 @@ public class CoHCanvas extends Canvas {
 			for(int j=0;j<data.amods.length;++j){
 				int x = 1+i;
 				int y = 1+j;
-				int need2throw = dice.normalize(getValue(data.dv) - getValue(data.av)-data.amods[j]+data.dmods[i]);
+				int need2throw = hand.normalize(getValue(data.dv) - getValue(data.av)-data.amods[j]+data.dmods[i]);
 				int probability = dice.getProbability(need2throw);
 				gx.fillPercent(probability, x,y);
 				if(roll >= need2throw && data.markRoll)
@@ -234,7 +237,7 @@ public class CoHCanvas extends Canvas {
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
-			data.roll = dice.roll();
+			data.roll = hand.roll();
 			timer.schedule(new TimerTask(){
 				public void run() {
 					bigDice = false;
