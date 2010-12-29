@@ -10,6 +10,7 @@ import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 
 import common.ChartGraphics;
+import common.ConfigView;
 import common.Dice;
 import common.DiceGraphics;
 import common.DiceHand;
@@ -52,15 +53,18 @@ public class CoHCanvas extends Canvas {
 		gdp.setGrid(11);
 		gd = new DiceGraphics(0,(1+data.amods.length)*cellheight,getWidth(),getHeight());
 		bigDiceSize = Math.min(gd.getWidth()/2-DIE_MARGIN*3, gd.getHeight()-DIE_MARGIN*2);
-		dice = new Dice(2,6);
-		hand = new DiceHand(2, 6);
 		try{
 			diceSound = Manager.createPlayer(getClass().getResourceAsStream("/dice.amr"),"audio/amr");
 			diceSound.prefetch();
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-	} 
+	}
+	
+	public void setDice(Dice dice) {
+		this.dice = dice;
+		hand = new DiceHand(2, 6);		
+	}
 	
 	public void paint(Graphics g) {
 		paintGrid(g);

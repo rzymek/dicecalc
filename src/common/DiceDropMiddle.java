@@ -3,6 +3,7 @@ package common;
 public class DiceDropMiddle extends Dice {
 	private int[] tmp;
 	private final int drop;
+	
 	public DiceDropMiddle(int count, int sides, int drop) {
 		this.drop = drop;
 		min = count - drop;
@@ -49,5 +50,8 @@ public class DiceDropMiddle extends Dice {
 	            }
 	        }
 	    }
+	}
+	public String toString() {
+		return super.toString() + (drop>0 ? " -"+drop:"");
 	}
 }

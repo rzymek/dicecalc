@@ -5,6 +5,7 @@ public class Dice {
 	protected int min;
 	protected int max;
 	protected int[] p = null;
+	private int[] atLeastP = null;
 	
 	protected Dice() {
 		
@@ -20,10 +21,15 @@ public class Dice {
 	}
 
 	protected void calcProb(int space) {
-		for (int i = p.length-2; i >= 0; --i) 
-			p[i] += p[i+1];
+		atLeastP = new int[max-min+1];
 		for (int i = 0; i < p.length; ++i) 
+			atLeastP[i] = p[i];
+		for (int i = atLeastP.length-2; i >= 0; --i) 
+			atLeastP[i] += atLeastP[i+1];
+		for (int i = 0; i < p.length; ++i) { 
 			p[i] = 100 * p[i] / space;
+			atLeastP[i] = 100 * atLeastP[i] / space;
+		}
 	}
 
 	protected int calcSpace(int count, int sides) {
@@ -56,10 +62,22 @@ public class Dice {
 	public int getProbability(int value) {
 		return p[value-min];
 	}
+	public int getAtLeastProbability(int value) {
+		return atLeastP[value-min];
+	}
 	public int getMax() {
 		return max;
 	}
 	public int getMin() {
 		return min;
+	}
+	public int getSides(){
+		return max/min;
+	}
+	public int getCount() {
+		return min;
+	}
+	public String toString() {
+		return getCount()+"d"+getSides();
 	}
 }
