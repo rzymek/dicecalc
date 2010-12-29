@@ -17,18 +17,33 @@ public class DiceDropMiddle extends Dice {
 	
 	
 	protected int process(int[] table) {
+		return getSum(table) - min;
+	}
+
+	public int getSum(int[] table) {
+		return super.getSum(resetUncountedDice(table));
+//		int s = (table.length - drop)/2;
+//		int e = table.length - (table.length - drop)/2;
+//		int sum = 0;
+//		for (int i = 0; i < s; i++) {
+//			sum += tmp[i];			
+//		}
+//		for (int i = e; i < table.length; i++) {
+//			sum += tmp[i];
+//		}
+//		for(int i=s; i<e; ++i)
+//			tmp[i] = 0;
+//		return sum;
+	}
+	
+	public int[] resetUncountedDice(int[] table){
 		copy(table, tmp);
 		sort(tmp);
 		int s = (table.length - drop)/2;
 		int e = table.length - (table.length - drop)/2;
-		int sum = 0;
-		for (int i = 0; i < s; i++) {
-			sum += tmp[i];
-		}
-		for (int i = e; i < table.length; i++) {
-			sum += tmp[i];
-		}
-		return sum - min;
+		for(int i=s; i<e; ++i)
+			tmp[i] = 0;
+		return tmp;
 	}
 	
 	private void copy(int[] table, int[] tmp) {
@@ -37,6 +52,9 @@ public class DiceDropMiddle extends Dice {
 		}
 	}
 
+	public int getCount() {
+		return super.getCount()+drop;
+	}
 
 	public static void sort(int[] x) {
 	    boolean doMore = true;
@@ -51,7 +69,10 @@ public class DiceDropMiddle extends Dice {
 	        }
 	    }
 	}
+	
+	
 	public String toString() {
-		return super.toString() + (drop>0 ? " -"+drop:"");
+		return super.toString()
+			+ (drop>0 ? " -"+drop:"");
 	}
 }

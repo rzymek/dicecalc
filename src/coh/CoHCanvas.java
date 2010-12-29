@@ -10,8 +10,8 @@ import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 
 import common.ChartGraphics;
-import common.ConfigView;
 import common.Dice;
+import common.DiceDropMiddle;
 import common.DiceGraphics;
 import common.DiceHand;
 import common.GridGraphics;
@@ -52,7 +52,6 @@ public class CoHCanvas extends Canvas {
 		gdp = new ChartGraphics(2*DIE_MARGIN+DIE_SIZE, (1+data.amods.length)*cellheight + 2*DIE_MARGIN,getWidth(),getHeight());
 		gdp.setGrid(11);
 		gd = new DiceGraphics(0,(1+data.amods.length)*cellheight,getWidth(),getHeight());
-		bigDiceSize = Math.min(gd.getWidth()/2-DIE_MARGIN*3, gd.getHeight()-DIE_MARGIN*2);
 		try{
 			diceSound = Manager.createPlayer(getClass().getResourceAsStream("/dice.amr"),"audio/amr");
 			diceSound.prefetch();
@@ -63,17 +62,21 @@ public class CoHCanvas extends Canvas {
 	
 	public void setDice(Dice dice) {
 		this.dice = dice;
-		hand = new DiceHand(2, 6);		
+		hand = new DiceHand(dice);		
+		bigDiceSize = Math.min(
+				gd.getWidth()/dice.getCount()-DIE_MARGIN*(dice.getCount()+1), 
+				gd.getHeight()-DIE_MARGIN*dice.getCount()
+		);
 	}
 	
 	public void paint(Graphics g) {
 		paintGrid(g);
-		paintProbChart(g);
+//		paintProbChart(g);
 		if(data.roll != null) {
 			if(bigDice)
 				paintBigDice(g);
 			else {
-				paintDiceDistributionChart(g);		
+//				paintDiceDistributionChart(g);		
 				paintDice(g);
 			}
 			g.setFont(larger);g.setColor(0xffffff);
@@ -81,12 +84,21 @@ public class CoHCanvas extends Canvas {
 			g.setFont(smaller);g.setColor(0x808080);
 			g.drawString(String.valueOf(hand.getCount()), cellwidth, cellheight, Graphics.BOTTOM|Graphics.RIGHT);
 		}
+		g.setColor(0xffffff);
+		g.drawString(dice.toString(), getWidth(), 0, Graphics.TOP|Graphics.RIGHT);
 	}
 
 	private void paintBigDice(Graphics g) {
 		gd.setGraphics(g);
-		gd.drawDie(data.roll[0], DIE_MARGIN, DIE_MARGIN, bigDiceSize,0x000000,0xffffff);
-		gd.drawDie(data.roll[1], DIE_MARGIN+bigDiceSize+DIE_MARGIN, DIE_MARGIN, bigDiceSize,0x000000,0xffffff);
+		int[] resetUncountedDice = dice.resetUncountedDice(data.roll);
+		int color;
+		for(int i=0; i<data.roll.length; ++i) {
+			color = resetUncountedDice[i] == 0 ? 0x808080 : 0xffffff;
+			gd.drawDie(data.roll[i], 
+					DIE_MARGIN+i*(DIE_MARGIN+bigDiceSize), 
+					DIE_MARGIN, 
+					bigDiceSize, 0x000000,color);
+		}
 	}
 
 	private void paintProbChart(Graphics g) {
@@ -112,12 +124,15 @@ public class CoHCanvas extends Canvas {
 		g.setColor(0xffffff);
 		int fg = 0xffffff;
 		int bg = 0x000000;
-		gd.drawDie(data.roll[0], DIE_MARGIN, DIE_MARGIN, DIE_SIZE,bg,fg);
-		gd.drawDie(data.roll[1], DIE_MARGIN, 2*DIE_MARGIN+DIE_SIZE, DIE_SIZE,bg,fg);
-		String s = String.valueOf(data.roll[0]+data.roll[1]);
+		int[] resetUncountedDice = dice.resetUncountedDice(data.roll);
+		for(int i=0; i<data.roll.length; ++i) {
+			fg = resetUncountedDice[i] == 0 ? 0x808080 : 0xffffff;
+			gd.drawDie(data.roll[i], DIE_MARGIN, DIE_MARGIN+i*(DIE_MARGIN+DIE_SIZE), DIE_SIZE,bg,fg);
+		}
+		String s = String.valueOf(dice.getSum(data.roll));	
 		int x = DIE_MARGIN + (DIE_SIZE - larger.stringWidth(s))/2;
 		g.setColor(fg);
-		int y = 3*DIE_MARGIN+2*DIE_SIZE;
+		int y = DIE_MARGIN+dice.getCount()*(DIE_SIZE+DIE_MARGIN);
 		g.setFont(larger);
 		gd.draw(s, x,y, Graphics.LEFT|Graphics.TOP);
 		g.setFont(Font.getFont(Font.FACE_SYSTEM,Font.STYLE_PLAIN,Font.SIZE_SMALL));
@@ -242,6 +257,7 @@ public class CoHCanvas extends Canvas {
 				ex.printStackTrace();
 			}
 			data.roll = hand.roll();
+			DiceDropMiddle.sort(data.roll);
 			timer.schedule(new TimerTask(){
 				public void run() {
 					bigDice = false;

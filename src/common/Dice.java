@@ -77,7 +77,18 @@ public class Dice {
 	public int getCount() {
 		return min;
 	}
+	public int[] resetUncountedDice(int[] table) {
+		return table;
+	}
 	public String toString() {
 		return getCount()+"d"+getSides();
+	}
+
+	public int getSum(int[] roll) {
+		int sum=0;
+		for (int i = 0; i < roll.length; i++) {
+			sum += roll[i];
+		}
+		return sum;
 	}
 }

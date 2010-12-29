@@ -44,12 +44,11 @@ public abstract class M extends MIDlet implements CommandListener{
 	
 	protected void run(CoHCanvas mainScreen) {
 		this.mainScreen = mainScreen;
-		this.mainScreen.setDice(configView.getDefault());
 		mainScreen.addCommand(COMMAND_EXIT);
 		mainScreen.addCommand(COMMAND_SETUP);
 		mainScreen.addCommand(COMMAND_CONFIG_VIEW);
 		mainScreen.setCommandListener(this);
-		Display.getDisplay(this).setCurrent(mainScreen);
+		showMain();
 	}
 
 	public void commandAction(Command c, Displayable d) {
@@ -63,10 +62,13 @@ public abstract class M extends MIDlet implements CommandListener{
 			show(new Setup());
 		}
 	}
+	
 	public static void show(Displayable d) {
 		Display.getDisplay(instance).setCurrent(d);
 	}
+	
 	public static void showMain() {
+		instance.mainScreen.setDice(instance.configView.getDefault());
 		show(instance.mainScreen);
 	}
 }
