@@ -8,16 +8,16 @@ public class GridPanel {
 	int[] sizes = {Font.SIZE_LARGE,Font.SIZE_LARGE};
 	private int font = Font.FACE_SYSTEM;
 	
-	private String[][][] texts;
-	private int[][][] styles;
-	private int cellWidth=10;
-	private int cellHeight=10;
+	protected String[][][] texts;
+	protected byte[][][] styles;
+	protected int cellWidth=10;
+	protected int cellHeight=10;
 	
 	public GridPanel(String[][][] texts) {
 		this.texts = texts;
 	}
 	
-	public void setStyles(int[][][] styles) {
+	public void setStyles(byte[][][] styles) {
 		this.styles = styles;
 	}
 	
@@ -72,7 +72,8 @@ public class GridPanel {
 		}
 	}
 
-	private Font getFont(int x, int y, int i) {
+	protected Font getFont(int x, int y, int i) {
+		//int style = styles[y][x][i] & (Font.STYLE_BOLD | Font.STYLE_ITALIC | Font.STYLE_PLAIN | Font.STYLE_UNDERLINED);		
 		return Font.getFont(font, styles[y][x][i], sizes[i]);
 	}
 	
@@ -92,14 +93,26 @@ public class GridPanel {
 		for(int y=0; y<texts.length;++y){
 			for(int x=0; x<texts[y].length;++x){
 				String[] text = texts[y][x];
-				g.setFont(getFont(x, y, 0));
-				g.drawString(text[0], cellWidth * x +2, cellHeight * y, Graphics.LEFT | Graphics.TOP);
-				g.setFont(getFont(x, y, 1));
-				
-				g.drawString(text[1], cellWidth * (x + 1) -1, cellHeight * (y + 1), Graphics.RIGHT | Graphics.BOTTOM);
+				drawCell(g, x, y, text);
 			}
 		}
 	}
+
+	protected void drawCell(Graphics g, int x, int y, String[] text) {
+		drawCellUpper(g, x, y, text[0]);
+		drawCellLower(g, x, y, text[1]);
+	}
+
+	protected void drawCellLower(Graphics g, int x, int y, String lower) {
+		g.setFont(getFont(x, y, 1));
+		g.drawString(lower, cellWidth * (x + 1) -1, cellHeight * (y + 1), Graphics.RIGHT | Graphics.BOTTOM);
+	}
+
+	protected void drawCellUpper(Graphics g, int x, int y, String upper) {
+		g.setFont(getFont(x, y, 0));
+		g.drawString(upper, cellWidth * x +2, cellHeight * y, Graphics.LEFT | Graphics.TOP);
+	}
+	
 	public void setText(int x, int y, String a, String b){
 		if(a != null)
 			texts[y][x][0] = a;
