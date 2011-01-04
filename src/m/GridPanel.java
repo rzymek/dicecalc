@@ -86,6 +86,7 @@ public class GridPanel {
 	}
 
 	public void paint(Graphics g) {
+		g.setColor(0x606060);
 		for (int y = 1; y <= texts.length; ++y)
 			g.drawLine(0, y* cellHeight, getCols() * cellWidth, y * cellHeight);
 		for (int x = 1; x <= texts[0].length; ++x)

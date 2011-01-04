@@ -2,12 +2,12 @@ package m;
 
 import javax.microedition.lcdui.Graphics;
 
-public class EditableGridPanel extends GridPanel{
+public class EditableGridPanel extends ColorGridPanel{
 	private int cursor = 0;
-	private int[][] editable;
+	protected int[][] editable;
 
-	public EditableGridPanel(String[][][] texts, int[][] editable) {
-		super(texts);
+	public EditableGridPanel(String[][][] texts, int[][] editable, int[][] color) {
+		super(texts, color);
 		this.editable = editable;
 		for (int i = 0; i < editable.length; i++) 
 			updateEdited(i);
@@ -21,7 +21,6 @@ public class EditableGridPanel extends GridPanel{
 	}
 
 	protected void drawCellLower(Graphics g, int x, int y, String text) {
-//		super.drawCellLower(g, x, y, text);
 		if (editable[cursor][0] == x && editable[cursor][1] == y) {
 			g.setColor(0xffffff);
 			g.fillRect(cellWidth * x, cellHeight * y + cellHeight/2, cellWidth, cellHeight/2);
@@ -34,13 +33,6 @@ public class EditableGridPanel extends GridPanel{
 		}
 	}
 
-	private boolean isEditable(int x, int y) {
-		for (int i = 0; i < editable.length; i++) {
-			if(editable[i][0] == x && editable[i][1] == y)
-				return true;
-		}
-		return false;
-	}
 	public void setCurrentValue(int value) {
 		editable[cursor][2] = value;
 		updateEdited(cursor);		

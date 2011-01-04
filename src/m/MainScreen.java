@@ -29,7 +29,7 @@ public class MainScreen extends Canvas {
 			{0,1,5},//AV
 			{1,0,12},//DV
 		};
-		gridPanel = new EditableGridPanel(texts, editable);		
+		gridPanel = new ProbabilityTable(texts, editable, new Probability2k6());		
 		gridPanel.setStyles(styles);
 		gridPanel.invalidate(getWidth(), getHeight());
 	}
