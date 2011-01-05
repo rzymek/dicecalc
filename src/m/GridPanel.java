@@ -5,7 +5,7 @@ import javax.microedition.lcdui.Graphics;
 
 
 public class GridPanel {
-	int[] sizes = {Font.SIZE_LARGE,Font.SIZE_LARGE};
+	int[] sizes = {Font.SIZE_MEDIUM,Font.SIZE_LARGE};
 	private int font = Font.FACE_SYSTEM;
 	
 	protected String[][][] texts;
@@ -44,7 +44,7 @@ public class GridPanel {
 			}
 			cellWidth = wmax;
 			cellHeight = hmax;
-			if(sizes[0] == Font.SIZE_SMALL)
+			if(sizes[0] == sizes[1] && sizes[0] == Font.SIZE_SMALL)
 				break; //can't be any smaller
 			if(cellWidth * getCols() > width || cellHeight * getRows() > height) {
 				makeSmaller();
@@ -56,9 +56,9 @@ public class GridPanel {
 
 	private void makeSmaller() {
 		if(sizes[0] != sizes[1])
-			sizes[0] = sizes[1];
+			sizes[1] = sizes[0];
 		else
-			sizes[1] = getSmaller(sizes[1]);
+			sizes[0] = getSmaller(sizes[0]);
 	}
 
 	private int getSmaller(int fontSize) {
