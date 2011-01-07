@@ -73,8 +73,11 @@ public class GridPanel {
 	}
 
 	protected Font getFont(int x, int y, int i) {
-		//int style = styles[y][x][i] & (Font.STYLE_BOLD | Font.STYLE_ITALIC | Font.STYLE_PLAIN | Font.STYLE_UNDERLINED);		
-		return Font.getFont(font, styles[y][x][i], sizes[i]);
+		//int style = styles[y][x][i] & (Font.STYLE_BOLD | Font.STYLE_ITALIC | Font.STYLE_PLAIN | Font.STYLE_UNDERLINED);
+		if(styles == null)
+			return Font.getFont(font, Font.STYLE_PLAIN, sizes[i]);
+		else
+			return Font.getFont(font, styles[y][x][i], sizes[i]);
 	}
 	
 	public int getRows() {

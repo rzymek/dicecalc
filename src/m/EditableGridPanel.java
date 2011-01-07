@@ -53,4 +53,8 @@ public class EditableGridPanel extends ColorGridPanel{
 	public void nextEdit() {
 		setEditing((getEditing() + 1) % editable.length);
 	}
+
+	public int getHeight() {
+		return cellHeight * getRows();
+	}
 }

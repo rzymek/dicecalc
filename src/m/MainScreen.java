@@ -10,6 +10,7 @@ public class MainScreen extends Canvas {
 	private static final int MIN_VALUE = -9;
 	private static final int MAX_VALUE = 30;
 	private EditableGridPanel gridPanel;
+	private GridPanel d6Panel;
 
 	public MainScreen() {
 		String[][][] texts = {
@@ -29,9 +30,27 @@ public class MainScreen extends Canvas {
 			{0,1,5},//AV
 			{1,0,12},//DV
 		};
-		gridPanel = new ProbabilityTable(texts, editable, new Probability2k6());		
+		gridPanel = new ProbabilityTable(texts, editable, new ProbabilityNdN(2,6));		
 		gridPanel.setStyles(styles);
 		gridPanel.invalidate(getWidth(), getHeight());
+		
+		String[][][] texts6 = {{
+			{"1","100%"},
+			{"2","00%"},
+			{"3","00%"},
+			{"4","00%"},
+			{"5","00%"},
+			{"6","00%"},
+		}};
+		int[][] d6color = {{0,0,0,0,0,0}};
+		ProbabilityNdN d6 = new ProbabilityNdN(1, 6);
+		for(int i=0;i<d6color[0].length; ++i) {
+			int p = d6.get(i+1);
+			d6color[0][i] = ProbabilityTable.getProbabilityColor(p);
+			texts6[0][i][1] = p+"%";
+		}
+		d6Panel = new ColorGridPanel(texts6, d6color);
+		d6Panel.invalidate(getWidth(), getHeight());
 	}
 	
 	protected void paint(Graphics g) {
@@ -39,6 +58,9 @@ public class MainScreen extends Canvas {
 		g.fillRect(0,0,getWidth(),getHeight());
 		g.setColor(0xffffff);
 		gridPanel.paint(g);
+		int h = gridPanel.getHeight();
+		g.translate(0, h);
+		d6Panel.paint(g);
 	}
 	
 	protected void keyPressed(int keyCode) {
@@ -82,5 +104,4 @@ public class MainScreen extends Canvas {
 		}
 		repaint();
 	}
-
 }

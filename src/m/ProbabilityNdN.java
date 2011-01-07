@@ -1,10 +1,10 @@
 package m;
 
-public class Probability2k6 implements ProbabilityProfile {
+public class ProbabilityNdN implements ProbabilityProfile {
 	private Dice dice;
 
-	public Probability2k6() {
-		dice = new Dice(2,6);
+	public ProbabilityNdN(int n, int d) {
+		dice = new Dice(n,d);
 	}
 		
 	public int get(int v) {
