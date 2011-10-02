@@ -4,16 +4,29 @@ import java.util.Enumeration;
 import java.util.Stack;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.midlet.MIDlet;
 
-public class SCSMainScreen extends Canvas {
+public class SCSMainScreen extends Canvas implements CommandListener {
+	private static final Command BACK = new Command("Back",Command.BACK, 10);
+	private static final Command EXIT = new Command("Exit",Command.OK, 1);
 	private final Stack attack = new Stack();
 	private final Stack defence = new Stack();
 	private Stack selected = attack;
 	
 	private static final int SPACING = 2;
+	private final MIDlet midlet;
 
+	public SCSMainScreen(MIDlet midlet) {
+		this.midlet = midlet;
+		setCommandListener(this);
+		addCommand(BACK);
+		addCommand(EXIT);
+	}
 	protected void paint(Graphics g) {
 		g.setColor(0x000000);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -55,10 +68,18 @@ public class SCSMainScreen extends Canvas {
 		int attack = sum(this.attack);
 		int defence = sum(this.defence);
 		if(attack > defence) {
-			return (attack / defence) + ":1";
+			if(defence == 0)
+				return "";
+			return round((double)attack / defence) + ":1";
 		}else{
-			return "1:"+(defence / attack);
+			if(attack == 0)
+				return "";
+			return "1:"+round((double)defence / attack);
 		}
+	}
+
+	private int round(double f) {
+		return (int)Math.floor(f+0.5f);
 	}
 
 	private String sumString(Stack stack) {
@@ -126,6 +147,14 @@ public class SCSMainScreen extends Canvas {
 			}
 		}
 		repaint();
+	}
+	public void commandAction(Command cmd, Displayable displayable) {
+		if(cmd == BACK) {
+			selected.pop();
+			repaint();
+		}else if(cmd == EXIT){
+			midlet.notifyDestroyed();
+		}
 	}
 
 }

@@ -7,7 +7,7 @@ import m.MIDletAdapter;
 public class M extends MIDletAdapter {
 
 	protected Displayable createMainScreen() {
-		return new SCSMainScreen();
+		return new SCSMainScreen(this);
 	}
 
 }

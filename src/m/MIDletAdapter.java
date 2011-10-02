@@ -7,6 +7,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 public abstract class MIDletAdapter extends MIDlet {
 	protected Displayable mainScreen = null;
+
 	public void startApp() {
 		show(getMainScreen());
 	}
