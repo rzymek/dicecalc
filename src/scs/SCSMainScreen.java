@@ -1,6 +1,7 @@
 package scs;
 
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Stack;
 
 import javax.microedition.lcdui.Canvas;
@@ -17,6 +18,8 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 	private final Stack attack = new Stack();
 	private final Stack defence = new Stack();
 	private Stack selected = attack;
+	private final int[] dice = {0,0};
+	private final Random random = new Random();
 	
 	private static final int SPACING = 2;
 	private final MIDlet midlet;
@@ -62,6 +65,11 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 		g.setFont(big);
 		g.drawString(ratio(), getWidth()/2, y, Graphics.HCENTER | Graphics.TOP); 
 		y += g.getFont().getHeight()+SPACING;
+		if(dice[0] != 0) {
+			String d = dice[0]+"+"+dice[1]+"="+(dice[0]+dice[1]);
+			g.drawString(d, getWidth()/2, y, Graphics.HCENTER | Graphics.TOP);
+			y += g.getFont().getHeight()+SPACING;
+		} 
 	}
 	
 	private String ratio() {
@@ -124,6 +132,14 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 			if(value == 0)
 				value = 10;
 			selected.push(new Integer(value));
+			break;
+		case KEY_POUND:
+			dice[0] = random.nextInt(6)+1;
+			dice[1] = random.nextInt(6)+1;
+			break;
+		case KEY_STAR:
+			dice[0]=0;
+			dice[1]=0;
 			break;
 		default:
 			switch(getGameAction(keyCode)) {
