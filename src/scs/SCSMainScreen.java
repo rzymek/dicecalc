@@ -73,16 +73,16 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 	}
 	
 	private String ratio() {
-		int attack = sum(this.attack);
-		int defence = sum(this.defence);
+		double attack = sum(this.attack);
+		double defence = sum(this.defence);
 		if(attack > defence) {
 			if(defence == 0)
 				return "";
-			return round((double)attack / defence) + ":1";
+			return round(attack / defence) + ":1";
 		}else{
 			if(attack == 0)
 				return "";
-			return "1:"+round((double)defence / attack);
+			return "1:"+round(defence / attack);
 		}
 	}
 
@@ -96,8 +96,11 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 		if(!elements.hasMoreElements())
 			return "0";
 		for(;;) {
-			Integer value = (Integer) elements.nextElement();
-			sum.append(value);
+			Double value = (Double) elements.nextElement();
+			if(value.doubleValue() == Math.floor(value.doubleValue()))
+				sum.append(value.intValue());
+			else
+				sum.append(value);
 			if(elements.hasMoreElements())
 				sum.append("+");
 			else
@@ -106,12 +109,12 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 		return sum.toString();
 	}
 
-	private int sum(Stack stack) {
-		int res = 0;
+	private double sum(Stack stack) {
+		double res = 0;
 		Enumeration elements = stack.elements();
 		while (elements.hasMoreElements()) {
-			Integer value = (Integer) elements.nextElement();
-			res += value.intValue();			
+			Double value = (Double) elements.nextElement();
+			res += value.doubleValue();			
 		}
 		return res;
 	}
@@ -131,15 +134,17 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 			int value = keyCode - KEY_NUM0;
 			if(value == 0)
 				value = 10;
-			selected.push(new Integer(value));
+			selected.push(new Double(value));
 			break;
 		case KEY_POUND:
 			dice[0] = random.nextInt(6)+1;
 			dice[1] = random.nextInt(6)+1;
 			break;
-		case KEY_STAR:
-			dice[0]=0;
-			dice[1]=0;
+		case KEY_STAR:			
+			if(selected.isEmpty())
+				return;
+			Double lastElement = (Double) selected.pop();
+			selected.push(new Double(lastElement.doubleValue() / 2.0));
 			break;
 		default:
 			switch(getGameAction(keyCode)) {
