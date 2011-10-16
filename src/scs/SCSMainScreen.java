@@ -13,7 +13,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.midlet.MIDlet;
 
 public class SCSMainScreen extends Canvas implements CommandListener {
-	private static final Command BACK = new Command("Back",Command.BACK, 10);
+	private static final Command CLEAR = new Command("Clear",Command.BACK, 10);
 	private static final Command EXIT = new Command("Exit",Command.OK, 1);
 	private final Stack attack = new Stack();
 	private final Stack defence = new Stack();
@@ -27,7 +27,7 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 	public SCSMainScreen(MIDlet midlet) {
 		this.midlet = midlet;
 		setCommandListener(this);
-		addCommand(BACK);
+		addCommand(CLEAR);
 		addCommand(EXIT);
 	}
 	protected void paint(Graphics g) {
@@ -155,10 +155,9 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 				selected = attack;
 				break;
 			case FIRE:
-				if(selected == attack)
-					selected = defence;
-				else 
-					selected = attack;
+				defence.removeAllElements();
+				attack.removeAllElements();
+				break;
 			case LEFT:
 				selected.pop();
 				break;
@@ -170,8 +169,9 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 		repaint();
 	}
 	public void commandAction(Command cmd, Displayable displayable) {
-		if(cmd == BACK) {
-			selected.pop();
+		if(cmd == CLEAR) {
+			defence.removeAllElements();
+			attack.removeAllElements();
 			repaint();
 		}else if(cmd == EXIT){
 			midlet.notifyDestroyed();
