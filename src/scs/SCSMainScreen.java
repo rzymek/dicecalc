@@ -155,8 +155,7 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 				selected = attack;
 				break;
 			case FIRE:
-				defence.removeAllElements();
-				attack.removeAllElements();
+				clear();
 				break;
 			case LEFT:
 				selected.pop();
@@ -170,12 +169,16 @@ public class SCSMainScreen extends Canvas implements CommandListener {
 	}
 	public void commandAction(Command cmd, Displayable displayable) {
 		if(cmd == CLEAR) {
-			defence.removeAllElements();
-			attack.removeAllElements();
+			clear();
 			repaint();
 		}else if(cmd == EXIT){
 			midlet.notifyDestroyed();
 		}
+	}
+	private void clear() {
+		defence.removeAllElements();
+		attack.removeAllElements();
+		dice[0]=0;
 	}
 
 }
